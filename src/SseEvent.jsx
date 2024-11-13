@@ -10,10 +10,11 @@ function SseEvent() {
         if (organizationId) {
             // Conectar al SSE a la URL de eventos con el organizationId
             eventSource = new EventSource(
-                `http://localhost:3000/events/${organizationId}`
+                `http://localhost:3003/v1/notifications/${organizationId}/realtime`
             );
 
             // Escuchar eventos para la organización específica
+            /*
             eventSource.addEventListener(
                 `organization-${organizationId}`,
                 (event) => {
@@ -21,6 +22,12 @@ function SseEvent() {
                     setEvents((prevEvents) => [...prevEvents, parsedData]);
                 }
             );
+            */
+
+            eventSource.onmessage = (event) => {
+                const parsedData = JSON.parse(event.data);
+                setEvents((prevEvents) => [...prevEvents, parsedData]);
+            };
 
             // Manejar error en la conexión SSE
             eventSource.onerror = (error) => {
